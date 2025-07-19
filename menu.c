@@ -1,15 +1,8 @@
 #include <ncurses.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include "menu.h"
 
-int menu (void);
-int main (void){
-   int t = menu();
-    if(t){
-        printf("Funcionoooooo\n");
-    }
-    return 0;
-}
+
 
 
 int menu (void){
@@ -24,7 +17,7 @@ int menu (void){
     mvwprintw(win, 0, xmax/5.5, "**FLAPPY BIRD**"); //Menu display
     mvwprintw(win, 1, 5, "Type option number you wish to select");
     mvwprintw(win, 3, xmax/5, "1-Start");
-    mvwprintw(win, 5, xmax/5, "2-Quit");
+    mvwprintw(win, 5, xmax/5, "Q-Quit");
     mvwprintw(win, 7, xmax/5, " ______");
     mvwprintw(win, 8, xmax/5, "|    > |");
     mvwprintw(win, 9, xmax/5, "| ( )  >");
@@ -33,9 +26,11 @@ int menu (void){
     opt = wgetch(win); //
     endwin(); //ends ncurses
     if(opt=='1'){
-        return 1;
+        return 1; //if the user inputs 1, it returns 1 to start the game
     }
-    else{
-        return 0;
+    else if(opt=='Q' || opt=='q'){
+        return 0; //if the user inputs Q or q, it returns 0   
+    }else{
+        return -1; //if the user inputs something other than 1 or Q, it returns -1
     }
 }

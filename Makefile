@@ -2,8 +2,8 @@
 CC := gcc
 CFLAGS := -c -Wall
 
-programa: bird_graphics.o main.o flying_logic.o
-	${CC} bird_graphics.o main.o flying_logic.o -o programa -lncurses
+programa: bird_graphics.o main.o flying_logic.o menu.o
+	${CC} bird_graphics.o main.o flying_logic.o menu.o -o programa -lncurses
 
 bird_graphics.o: bird_graphics.c bird_graphics.h bird.h
 	${CC} ${CFLAGS} bird_graphics.c 
@@ -12,6 +12,8 @@ main.o: main.c bird_graphics.h bird.h flying_logic.h
 	${CC} ${CFLAGS} main.c 
 flying_logic.o: flying_logic.c flying_logic.h bird_graphics.h bird.h
 	${CC} ${CFLAGS} flying_logic.c
+menu.o: menu.c menu.h
+	${CC} ${CFLAGS} menu.c
 clean:
 	rm *.o programa
 
