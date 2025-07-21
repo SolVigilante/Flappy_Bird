@@ -3,6 +3,7 @@
 #include "bird_graphics.h"
 #include "flying_logic.h"
 #include "menu.h"
+#include "pipes.h"
 
 
 int main(){
