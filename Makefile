@@ -1,24 +1,34 @@
-# Makefile for Flappy Bird project
+# Makefile for Flappy Bird project (con -I. para includes desde subdirectorios)
+
 CC := gcc
-CFLAGS := -c -Wall
+CFLAGS := -c -Wall -I.
 
-programa: bird_graphics.o main.o flying_logic.o menu.o screen.o
-	${CC} bird_graphics.o main.o flying_logic.o menu.o screen.o -o programa -lncurses
+programa: main.o flying_logic.o menu.o pipes_movement.o bird_graphics.o pipes_graphic.o screen.o
+	${CC} $^ -o programa -lncurses
 
-bird_graphics.o: bird_graphics.c bird_graphics.h bird.h
-	${CC} ${CFLAGS} bird_graphics.c 
+main.o: main.c backend/flying_logic.h backend/menu.h backend/pipes_movement.h frontend/bird_graphics.h frontend/pipes_graphic.h pipe.h bird.h
+	${CC} ${CFLAGS} main.c
 
-main.o: main.c bird_graphics.h bird.h flying_logic.h
-	${CC} ${CFLAGS} main.c 
-flying_logic.o: flying_logic.c flying_logic.h bird_graphics.h bird.h
-	${CC} ${CFLAGS} flying_logic.c
-menu.o: menu.c menu.h
-	${CC} ${CFLAGS} menu.c
-screen.o: screen.c screen.h
-	${CC} ${CFLAGS} screen.c
-	
+flying_logic.o: backend/flying_logic.c backend/flying_logic.h bird.h
+	${CC} ${CFLAGS} backend/flying_logic.c
+
+menu.o: backend/menu.c backend/menu.h
+	${CC} ${CFLAGS} backend/menu.c
+
+pipes_movement.o: backend/pipes_movement.c backend/pipes_movement.h
+	${CC} ${CFLAGS} backend/pipes_movement.c
+
+bird_graphics.o: frontend/bird_graphics.c frontend/bird_graphics.h bird.h
+	${CC} ${CFLAGS} frontend/bird_graphics.c
+
+pipes_graphic.o: frontend/pipes_graphic.c frontend/pipes_graphic.h
+	${CC} ${CFLAGS} frontend/pipes_graphic.c
+screen.o: backend/screen.c backend/screen.h
+	${CC} ${CFLAGS} backend/screen.c
+
 clean:
-	rm *.o programa
+	rm -f *.o backend/*.o frontend/*.o programa
 
 run: programa
 	./programa
+
