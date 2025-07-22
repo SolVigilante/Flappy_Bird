@@ -5,23 +5,14 @@
 #include "flying_logic.h"
 
 static void bird_update(bird_t* bird, char c);
-static void init_screen(void);
 static void flying_physics(bird_t * bird);
 
-long long current_time_ms() {
+long long current_time_ms(void) {
     struct timeval tv;
     gettimeofday(&tv, NULL);
     return (long long)(tv.tv_sec) * 1000 + (tv.tv_usec / 1000);
 }
 
-static void init_screen(void){
-    initscr(); // Initializes the ncurses screen
-    curs_set(0); // Hides the cursor
-    keypad(stdscr, TRUE);//enables the keypad input
-    noecho(); //deletes thte input character
-    cbreak(); // Disables line buffering, so input is available immediately
-    timeout(100); // Waits 100ms for a key, then returns ERR 
-}
 static void bird_update(bird_t* bird, char c){
     switch (c) {
         case ' ': 
@@ -50,30 +41,19 @@ static void flying_physics(bird_t * bird){
         bird->bird_y += bird->velocity * 0.1f; //position in function of velocity
 }
 
-void game_start(void){ 
-    init_screen(); // Initializes the screen
-    bird_t bird;
-    init_bird(&bird); // Initializes the bird
-    static char c; // Variable to store the input character
-    long long now;
-    long long last_gravity_time = current_time_ms();//stores the initial time in milliseconds
-
-
-     while((c = getch()) != 'q'){
-        clear();
-        now = current_time_ms(); //stores the current time in milliseconds
-        if (now - last_gravity_time >= 50){ // Every 50ms, we update the bird's physics
-            flying_physics(&bird); // Updates the bird's physics
-            last_gravity_time = now; 
-        }
-        bird_update(&bird, c); // Updates the bird's state based on input
-        if(bird.velocity < 0.0f){
-            draw_fbird(&bird); // If the bird is flying, we draw the flying wings
-        }else{
-            draw_dbird(&bird); // If the bird is descending, we draw the descending wings
-        }
-        refresh(); // Refreshes the screen to show the updated graphics
-     }
-     endwin(); // Ends the ncurses mode
-
+long long game_start(char c, long long last_gravity_time, bird_t* bird) { 
+    long long now = current_time_ms(); //stores the current time in milliseconds
+    clear();
+    if (now - last_gravity_time >= 50){ // Every 50ms, we update the bird's physics
+        flying_physics(bird); // Updates the bird's physics
+        last_gravity_time = now; 
+    }
+    bird_update(bird, c); // Updates the bird's state based on input
+    if(bird->velocity < 0.0f){
+        draw_fbird(bird); // If the bird is flying, we draw the flying wings
+    }else{
+        draw_dbird(bird); // If the bird is descending, we draw the descending wings
+    }
+    refresh(); // Refreshes the screen to show the updated graphics
+    return last_gravity_time; // Returns the last gravity time to be used in the next iteration
 }
