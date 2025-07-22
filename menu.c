@@ -22,7 +22,6 @@ int menu (void){
     mvwprintw(win, 8, xmax/5, "|    > |");
     mvwprintw(win, 9, xmax/5, "| ( )  >");
     mvwprintw(win, 10, xmax/5, "|______|");
-
     opt = wgetch(win); //
     endwin(); //ends ncurses
     if(opt=='1'){
